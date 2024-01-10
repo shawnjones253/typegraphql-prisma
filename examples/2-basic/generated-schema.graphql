@@ -36,38 +36,38 @@ input BoolWithAggregatesFilter {
   not: NestedBoolWithAggregatesFilter
 }
 
-"""
-The javascript `Date` as string. Type represents date and time as the ISO Date string.
-"""
-scalar DateTime
-
 input DateTimeFieldUpdateOperationsInput {
-  set: DateTime
+  set: DateTimeISO
 }
 
 input DateTimeFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
+  equals: DateTimeISO
+  gt: DateTimeISO
+  gte: DateTimeISO
+  in: [DateTimeISO!]
+  lt: DateTimeISO
+  lte: DateTimeISO
   not: NestedDateTimeFilter
-  notIn: [DateTime!]
+  notIn: [DateTimeISO!]
 }
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.This scalar is serialized to a string in ISO 8601 format and parsed from a string in ISO 8601 format.
+"""
+scalar DateTimeISO
 
 input DateTimeWithAggregatesFilter {
   _count: NestedIntFilter
   _max: NestedDateTimeFilter
   _min: NestedDateTimeFilter
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
+  equals: DateTimeISO
+  gt: DateTimeISO
+  gte: DateTimeISO
+  in: [DateTimeISO!]
+  lt: DateTimeISO
+  lte: DateTimeISO
   not: NestedDateTimeWithAggregatesFilter
-  notIn: [DateTime!]
+  notIn: [DateTimeISO!]
 }
 
 type Mutation {
@@ -99,28 +99,28 @@ input NestedBoolWithAggregatesFilter {
 }
 
 input NestedDateTimeFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
+  equals: DateTimeISO
+  gt: DateTimeISO
+  gte: DateTimeISO
+  in: [DateTimeISO!]
+  lt: DateTimeISO
+  lte: DateTimeISO
   not: NestedDateTimeFilter
-  notIn: [DateTime!]
+  notIn: [DateTimeISO!]
 }
 
 input NestedDateTimeWithAggregatesFilter {
   _count: NestedIntFilter
   _max: NestedDateTimeFilter
   _min: NestedDateTimeFilter
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
+  equals: DateTimeISO
+  gt: DateTimeISO
+  gte: DateTimeISO
+  in: [DateTimeISO!]
+  lt: DateTimeISO
+  lte: DateTimeISO
   not: NestedDateTimeWithAggregatesFilter
-  notIn: [DateTime!]
+  notIn: [DateTimeISO!]
 }
 
 input NestedIntFilter {
@@ -211,15 +211,20 @@ input NullableStringFieldUpdateOperationsInput {
   set: String
 }
 
+enum NullsOrder {
+  first
+  last
+}
+
 type Post {
-  author: User
+  author(where: UserWhereInput): User
   authorId: String
   content: String
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   id: String!
   published: Boolean!
   title: String!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
 }
 
 type PostCountAggregate {
@@ -246,11 +251,11 @@ input PostCountOrderByAggregateInput {
 input PostCreateInput {
   author: UserCreateNestedOneWithoutPostsInput
   content: String
-  createdAt: DateTime
+  createdAt: DateTimeISO
   id: String
   published: Boolean!
   title: String!
-  updatedAt: DateTime
+  updatedAt: DateTimeISO
 }
 
 input PostCreateNestedManyWithoutAuthorInput {
@@ -266,11 +271,11 @@ input PostCreateOrConnectWithoutAuthorInput {
 
 input PostCreateWithoutAuthorInput {
   content: String
-  createdAt: DateTime
+  createdAt: DateTimeISO
   id: String
   published: Boolean!
   title: String!
-  updatedAt: DateTime
+  updatedAt: DateTimeISO
 }
 
 type PostGroupBy {
@@ -279,11 +284,11 @@ type PostGroupBy {
   _min: PostMinAggregate
   authorId: String
   content: String
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   id: String!
   published: Boolean!
   title: String!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
 }
 
 input PostListRelationFilter {
@@ -295,11 +300,11 @@ input PostListRelationFilter {
 type PostMaxAggregate {
   authorId: String
   content: String
-  createdAt: DateTime
+  createdAt: DateTimeISO
   id: String
   published: Boolean
   title: String
-  updatedAt: DateTime
+  updatedAt: DateTimeISO
 }
 
 input PostMaxOrderByAggregateInput {
@@ -315,11 +320,11 @@ input PostMaxOrderByAggregateInput {
 type PostMinAggregate {
   authorId: String
   content: String
-  createdAt: DateTime
+  createdAt: DateTimeISO
   id: String
   published: Boolean
   title: String
-  updatedAt: DateTime
+  updatedAt: DateTimeISO
 }
 
 input PostMinOrderByAggregateInput {
@@ -340,8 +345,8 @@ input PostOrderByWithAggregationInput {
   _count: PostCountOrderByAggregateInput
   _max: PostMaxOrderByAggregateInput
   _min: PostMinOrderByAggregateInput
-  authorId: SortOrder
-  content: SortOrder
+  authorId: SortOrderInput
+  content: SortOrderInput
   createdAt: SortOrder
   id: SortOrder
   published: SortOrder
@@ -351,8 +356,8 @@ input PostOrderByWithAggregationInput {
 
 input PostOrderByWithRelationInput {
   author: UserOrderByWithRelationInput
-  authorId: SortOrder
-  content: SortOrder
+  authorId: SortOrderInput
+  content: SortOrderInput
   createdAt: SortOrder
   id: SortOrder
   published: SortOrder
@@ -457,7 +462,7 @@ input PostWhereInput {
   AND: [PostWhereInput!]
   NOT: [PostWhereInput!]
   OR: [PostWhereInput!]
-  author: UserRelationFilter
+  author: UserNullableRelationFilter
   authorId: StringNullableFilter
   content: StringNullableFilter
   createdAt: DateTimeFilter
@@ -468,7 +473,17 @@ input PostWhereInput {
 }
 
 input PostWhereUniqueInput {
+  AND: [PostWhereInput!]
+  NOT: [PostWhereInput!]
+  OR: [PostWhereInput!]
+  author: UserNullableRelationFilter
+  authorId: StringNullableFilter
+  content: StringNullableFilter
+  createdAt: DateTimeFilter
   id: String
+  published: BoolFilter
+  title: StringFilter
+  updatedAt: DateTimeFilter
 }
 
 type Query {
@@ -487,11 +502,17 @@ type Query {
   posts(cursor: PostWhereUniqueInput, distinct: [PostScalarFieldEnum!], orderBy: [PostOrderByWithRelationInput!], skip: Int, take: Int, where: PostWhereInput): [Post!]!
   user(where: UserWhereUniqueInput!): User
   users(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
+  usersCustom(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): [User!]
 }
 
 enum SortOrder {
   asc
   desc
+}
+
+input SortOrderInput {
+  nulls: NullsOrder
+  sort: SortOrder!
 }
 
 input StringFieldUpdateOperationsInput {
@@ -570,7 +591,7 @@ type User {
 }
 
 type UserCount {
-  posts: Int!
+  posts(where: PostWhereInput): Int!
 }
 
 type UserCountAggregate {
@@ -643,25 +664,25 @@ input UserMinOrderByAggregateInput {
   name: SortOrder
 }
 
+input UserNullableRelationFilter {
+  is: UserWhereInput
+  isNot: UserWhereInput
+}
+
 input UserOrderByWithAggregationInput {
   _count: UserCountOrderByAggregateInput
   _max: UserMaxOrderByAggregateInput
   _min: UserMinOrderByAggregateInput
   email: SortOrder
   id: SortOrder
-  name: SortOrder
+  name: SortOrderInput
 }
 
 input UserOrderByWithRelationInput {
   email: SortOrder
   id: SortOrder
-  name: SortOrder
+  name: SortOrderInput
   posts: PostOrderByRelationAggregateInput
-}
-
-input UserRelationFilter {
-  is: UserWhereInput
-  isNot: UserWhereInput
 }
 
 enum UserScalarFieldEnum {
@@ -696,10 +717,15 @@ input UserUpdateOneWithoutPostsNestedInput {
   connect: UserWhereUniqueInput
   connectOrCreate: UserCreateOrConnectWithoutPostsInput
   create: UserCreateWithoutPostsInput
-  delete: Boolean
-  disconnect: Boolean
-  update: UserUpdateWithoutPostsInput
+  delete: UserWhereInput
+  disconnect: UserWhereInput
+  update: UserUpdateToOneWithWhereWithoutPostsInput
   upsert: UserUpsertWithoutPostsInput
+}
+
+input UserUpdateToOneWithWhereWithoutPostsInput {
+  data: UserUpdateWithoutPostsInput!
+  where: UserWhereInput
 }
 
 input UserUpdateWithoutPostsInput {
@@ -711,6 +737,7 @@ input UserUpdateWithoutPostsInput {
 input UserUpsertWithoutPostsInput {
   create: UserCreateWithoutPostsInput!
   update: UserUpdateWithoutPostsInput!
+  where: UserWhereInput
 }
 
 input UserWhereInput {
@@ -724,6 +751,11 @@ input UserWhereInput {
 }
 
 input UserWhereUniqueInput {
+  AND: [UserWhereInput!]
+  NOT: [UserWhereInput!]
+  OR: [UserWhereInput!]
   email: String
   id: String
+  name: StringNullableFilter
+  posts: PostListRelationFilter
 }

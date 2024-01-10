@@ -6,6 +6,7 @@ import {
   FieldResolver,
   Ctx,
   Root,
+  Args,
 } from "type-graphql";
 import { ApolloServer } from "apollo-server";
 import path from "path";
@@ -18,7 +19,8 @@ import {
   PostRelationsResolver,
   UserCrudResolver,
   PostCrudResolver,
-} from "./prisma/generated/type-graphql";
+  FindManyUserArgs,
+} from "@generated/type-graphql";
 
 interface Context {
   prisma: PrismaClient;
@@ -31,6 +33,18 @@ class CustomUserResolver {
   async bestUser(@Ctx() { prisma }: Context): Promise<User | null> {
     return await prisma.user.findFirst({
       where: { email: "bob@prisma.io" },
+    });
+  }
+
+  @Query(returns => [User], { nullable: true })
+  async usersCustom(
+    @Ctx() { prisma }: Context,
+    @Args() args: FindManyUserArgs,
+  ): Promise<User[]> {
+    console.dir(args);
+    return await prisma.user.findMany({
+      ...args,
+      cursor: undefined,
     });
   }
 
